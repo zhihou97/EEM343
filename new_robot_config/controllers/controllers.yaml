@@ -1,0 +1,18 @@
+controller_list:
+  - name: hold_arm_controller
+    action_ns: "follow_joint_trajectory"
+    type: FollowJointTrajectory
+    joints:
+      - base_link_to_arm1_link1
+      - arm1_link1_to_link2
+      - arm1_link2_to_link3
+      - arm1_link3_to_link4
+      - arm1_link4_to_left_gripper
+  - name: cut_arm_controller
+    action_ns: "follow_joint_trajectory"
+    type: FollowJointTrajectory
+    joints:
+      - base_link_to_arm2_link1
+      - arm2_link1_to_link2
+      - arm2_link2_to_link3
+      - arm2_link3_to_link4

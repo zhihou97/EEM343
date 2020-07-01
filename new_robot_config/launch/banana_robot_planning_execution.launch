@@ -1,0 +1,93 @@
+<launch>
+	<rosparam command="load" file="$(find new_robot_config)/controllers/joint_names.yaml"/>
+
+	<include file="$(find new_robot_config)/launch/planning_context.launch" >
+		<arg name="load_robot_description" value="true" />
+	</include>
+
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+		<param name="/use_gui" value="false"/>
+		<rosparam param="/source_list">[/joint_states]</rosparam>
+	</node>
+
+	<include file="$(find new_robot_config)/launch/move_group.launch">
+		<arg name="publish_monitored_planning_scene" value="true" />
+	</include>
+
+	<!--<include file="$(find new_robot_config)/launch/moveit_rviz.launch">
+		<arg name="config" value="true"/>
+	</include>-->
+
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+                <arg name="world_name" value="$(find urdf_sim_tutorial)/world/banana_farm.world"/>
+                <arg name="paused" value="false"/>
+                <arg name="use_sim_time" value="true"/>
+                <arg name="gui" value="true"/>
+                <arg name="recording" value="false"/>
+                <arg name="debug" value="false"/>
+                <arg name="physics" value="ode"/>
+        </include>
+
+        <!-- Load the URDF into the parameter server -->
+  <arg name="x" default="0.97032"/>
+  <arg name="y" default="-1.35468"/>
+  <arg name="z" default="0.47"/>
+  <arg name="roll" default="0"/>
+  <arg name="pitch" default="0"/>
+  <arg name="yaw" default="1.57079633"/>
+        <param name="robot_description" textfile='$(find urdf_sim_tutorial)/urdf/banana_robot.urdf' />
+
+
+        <!-- Spin up the node that will spawn the robot model is defined in the URDF -->
+        <node
+                name="spawn_urdf"
+                pkg="gazebo_ros"
+                type="spawn_model"
+                args="-param robot_description -urdf -model robot
+                      -x $(arg x) -y $(arg y) -z $(arg z) 
+                      -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"
+        />
+
+          <!-- Robot state publisher -->
+        <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+                <param name="publish_frequency" type="double" value="25.0" />
+                <param name="tf_prefix" type="string" value="" />
+        </node>
+
+        <!-- joint_state_controller -->
+        <rosparam file="$(find urdf_sim_tutorial)/controller/joint_state_controller.yaml" command="load"/>
+        <node
+                name="joint_state_controller_spawner"
+                pkg="controller_manager"
+                type="controller_manager"
+                args="spawn
+                joint_state_controller"
+                respawn="false"
+                output="screen"
+        />
+
+        <!-- Load controller file to parameter server -->
+        <rosparam file="$(find urdf_sim_tutorial)/controller/hold_arm_controller.yaml" command="load"/>
+
+        <!-- Spin up the controller node -->
+        <node
+                name="hold_arm_controller_spawner"
+                pkg="controller_manager"
+                type="controller_manager"
+                args="spawn hold_arm_controller" respawn="false" output="screen"
+        />
+
+
+<!-- Load controller file to parameter server -->
+        <rosparam file="$(find urdf_sim_tutorial)/controller/cut_arm_controller.yaml" command="load"/>
+
+        <!-- Spin up the controller node -->
+        <node
+                name="cut_arm_controller_spawner"
+                pkg="controller_manager"
+                type="controller_manager"
+                args="spawn cut_arm_controller" respawn="false" output="screen"
+        />
+
+
+</launch>

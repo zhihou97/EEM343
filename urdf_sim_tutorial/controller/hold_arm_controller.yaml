@@ -1,0 +1,10 @@
+hold_arm_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+     - base_link_to_arm1_link1
+     - arm1_link1_to_link2
+     - arm1_link2_to_link3
+     - arm1_link3_to_link4
+     - arm1_link4_to_left_gripper
+  state_publish_rate:  25
+  action_monitor_rate: 10

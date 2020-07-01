@@ -1,0 +1,9 @@
+cut_arm_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+     - base_link_to_arm2_link1
+     - arm2_link1_to_link2
+     - arm2_link2_to_link3
+     - arm2_link3_to_link4
+  state_publish_rate:  50
+  action_monitor_rate: 10

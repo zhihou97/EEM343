@@ -1,0 +1,20 @@
+controller_list:
+  - name: fake_hold_arm_controller
+    joints:
+      - base_link_to_arm1_link1
+      - arm1_link1_to_link2
+      - arm1_link2_to_link3
+      - arm1_link3_to_link4
+      - arm1_link4_to_left_gripper
+  - name: fake_cut_arm_controller
+    joints:
+      - base_link_to_arm2_link1
+      - arm2_link1_to_link2
+      - arm2_link2_to_link3
+      - arm2_link3_to_link4
+  - name: fake_hold_hand_controller
+    joints:
+      - arm1_link4_to_left_gripper
+  - name: fake_cut_hand_controller
+    joints:
+      - arm2_link3_to_link4
